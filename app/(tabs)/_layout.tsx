@@ -1,9 +1,19 @@
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Icon } from "@/components/ui/icon";
-import { Bell, House, MessageSquare, Search, Users } from "lucide-react-native";
+import {
+  Bell,
+  House,
+  MessageSquare,
+  Search,
+  User,
+  Users,
+} from "lucide-react-native";
+import { TouchableOpacity } from "react-native";
 
 export default function TabLayout() {
+  const router = useRouter();
+
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "tomato" }}>
       <Tabs.Screen
@@ -11,12 +21,19 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => <House size={28} color={color} />,
+          headerTitleAlign: "center",
+          headerTitleStyle: { color: "tomato" },
+          headerRight: () => (
+            <TouchableOpacity onPressIn={() => router.push("/auth")}>
+              <Icon size="24" as={User} color="black" />
+            </TouchableOpacity>
+          ),
         }}
       />
       <Tabs.Screen
-        name="communities"
+        name="connections"
         options={{
-          title: "Communities",
+          title: "Connections",
           tabBarIcon: ({ color }) => <Users size={28} color={color} />,
         }}
       />

@@ -16,7 +16,12 @@ import {
 } from "@/components/ui/button";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { Icon, SearchIcon } from "@/components/ui/icon";
-import { Camera, MapPin, SlidersHorizontal } from "lucide-react-native";
+import {
+  Calendar,
+  Camera,
+  MapPin,
+  SlidersHorizontal,
+} from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Link } from "expo-router";
@@ -50,13 +55,13 @@ export default function ExploreScreen() {
         </Button>
       </View>
       <View className="py-4">
-        <EventsList />
+        <EventsList searchInput={searchInput} />
       </View>
     </View>
   );
 }
 
-const EventsList = () => {
+const EventsList = ({ searchInput }: { searchInput: string }) => {
   const [events, setEvents] = useState<
     {
       id: number;
@@ -89,12 +94,16 @@ const EventsList = () => {
     getEvents();
   }, []);
 
+  const filteredEvents = events.filter((event) =>
+    event.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   if (isFetching) return <Text>Loading...</Text>;
 
   return (
     <FlatList
       className="px-3"
-      data={events}
+      data={filteredEvents}
       renderItem={({
         item: event,
       }: {
@@ -111,9 +120,28 @@ const EventsList = () => {
           <View style={styles.detailsContainer}>
             <Text style={styles.title}>{event?.title}</Text>
             <Text style={styles.description}>{event?.description}</Text>
-            <Text style={styles.location}>
-              <Icon as={MapPin} color="gray" /> {event?.location}
-            </Text>
+            <View className="flex gap-2 mt-4">
+              <View className="flex-row items-center gap-1">
+                <Icon as={MapPin} color="green" />
+                <Text className="text-sm text-gray-500">{event?.location}</Text>
+              </View>
+              <View className="flex-row items-center gap-1">
+                <Icon as={Calendar} color="red" />{" "}
+                <Text className="text-sm text-gray-500">
+                  {new Date(event?.date)
+                    .toLocaleString("en-US", {
+                      timeZone: "Asia/Dhaka",
+                      month: "short",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                    .replace(",", "")}{" "}
+                  (Asia/Dhaka)
+                </Text>
+              </View>
+            </View>
           </View>
         </Link>
       )}

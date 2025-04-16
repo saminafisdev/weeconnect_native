@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Text, View } from "react-native";
+import { MapPin, Calendar } from "lucide-react-native";
 
 import { supabase } from "@/lib/supabase";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -99,6 +100,26 @@ const EventDetail = () => {
         className="aspect-video w-full rounded-xl"
       />
       <Text className="text-2xl font-bold">{event?.title}</Text>
+      <View className="flex-row items-center gap-2">
+        <Calendar color="red" />
+        <Text className="text-base text-gray-700">
+          {new Date(event?.date)
+            .toLocaleString("en-US", {
+              timeZone: "Asia/Dhaka",
+              month: "short",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
+            .replace(",", "")}{" "}
+          (Asia/Dhaka)
+        </Text>
+      </View>
+      <View className="flex-row items-center gap-2">
+        <MapPin color="green" />
+        <Text className="text-base text-gray-700">{event?.location}</Text>
+      </View>
       <Text className="leading-relaxed text-lg">{event?.description}</Text>
     </View>
   );

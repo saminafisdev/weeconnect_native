@@ -28,3 +28,37 @@ AppState.addEventListener("change", (state) => {
     supabase.auth.stopAutoRefresh();
   }
 });
+
+export const createGroup = async (name, description, location) => {
+  try {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      throw new Error("User is not authenticated.");
+    }
+
+    const { user } = session;
+
+    const { data, error } = await supabase
+      .from("groups")
+      .insert({
+        name,
+        description,
+        location,
+        user_id: user.id, // Updated to use user_id instead of created_by
+      })
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error creating group:", error.message);
+    throw error;
+  }
+};
