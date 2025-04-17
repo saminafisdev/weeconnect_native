@@ -28,6 +28,7 @@ const mockCommunities = [
 export default function ConnectionsScreen() {
   const [communities, setCommunities] = useState(mockCommunities);
   const [userGroups, setUserGroups] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const fetchUserGroups = async () => {
@@ -38,8 +39,11 @@ export default function ConnectionsScreen() {
 
         if (!session) {
           console.error("User is not authenticated.");
+          setIsAuthenticated(false);
           return;
         }
+
+        setIsAuthenticated(true);
 
         const { data, error } = await supabase
           .from("groups")
@@ -79,15 +83,19 @@ export default function ConnectionsScreen() {
 
   return (
     <View className="flex-1 bg-gray-50 px-6 py-8">
-      <Text className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
-        Your Groups
-      </Text>
-      <FlatList
-        data={userGroups}
-        renderItem={renderGroup}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 30 }}
-      />
+      {isAuthenticated && (
+        <>
+          <Text className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
+            Your Groups
+          </Text>
+          <FlatList
+            data={userGroups}
+            renderItem={renderGroup}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{ paddingBottom: 30 }}
+          />
+        </>
+      )}
 
       <Text className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
         Discover Groups

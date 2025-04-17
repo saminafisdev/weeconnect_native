@@ -50,9 +50,9 @@ export default function ExploreScreen() {
             className="text-black"
           />
         </Input>
-        <Button>
+        {/* <Button>
           <ButtonIcon as={SlidersHorizontal} />
-        </Button>
+        </Button> */}
       </View>
       <View className="py-4">
         <EventsList searchInput={searchInput} />
@@ -116,7 +116,13 @@ const EventsList = ({ searchInput }: { searchInput: string }) => {
         };
       }) => (
         <Link href={`/details/${event?.id}`} style={styles.card}>
-          <Image source={{ uri: event?.image }} style={styles.image} />
+          {/* <Image source={{ uri: event?.image }} style={styles.image} /> */}
+          <Image
+            source={{
+              uri: "https://cdn.prod.website-files.com/6593c9a7f9ab9dc8b1763db2/65b0566852bdf30e0a96201c_tech-events-meetups-hero-image.jpg",
+            }}
+            style={styles.image}
+          />
           <View style={styles.detailsContainer}>
             <Text style={styles.title}>{event?.title}</Text>
             <Text style={styles.description}>{event?.description}</Text>
